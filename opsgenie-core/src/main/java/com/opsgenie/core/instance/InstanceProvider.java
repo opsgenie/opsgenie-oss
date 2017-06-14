@@ -1,0 +1,142 @@
+package com.opsgenie.core.instance;
+
+import com.opsgenie.core.util.ExceptionUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+/**
+ * Provides instance for given {@link Class} at given {@link InstanceScope}
+ * by using specified {@link InstanceCreator}.
+ *
+ * @author serkan
+ */
+public final class InstanceProvider {
+
+    private static final Map<InstanceScope, InstanceFactory> INSTANCE_FACTORY_MAP =
+            new HashMap<InstanceScope, InstanceFactory>();
+    private static final DefaultInstanceCreator DEFAULT_INSTANCE_CREATOR =
+            new DefaultInstanceCreator();
+
+    static {
+        INSTANCE_FACTORY_MAP.put(
+                InstanceScope.GLOBAL,
+                new GlobalInstanceFactory());
+        INSTANCE_FACTORY_MAP.put(
+                InstanceScope.THREAD_LOCAL,
+                new ThreadLocalInstanceFactory());
+        INSTANCE_FACTORY_MAP.put(
+                InstanceScope.INHERITABLE_THREAD_LOCAL,
+                new InheritableThreadLocalInstanceFactory());
+        INSTANCE_FACTORY_MAP.put(
+                InstanceScope.PROTOTYPE,
+                new PrototypeInstanceFactory());
+    }
+
+    private InstanceProvider() {
+    }
+
+    public static <T> T getInstance(Class<T> clazz, InstanceScope scope) {
+        return getInstance(clazz, scope, DEFAULT_INSTANCE_CREATOR);
+    }
+
+    public static <T> T getInstance(Class<T> clazz, InstanceScope scope,
+                                    InstanceCreator creator) {
+        InstanceFactory instanceFactory = INSTANCE_FACTORY_MAP.get(scope);
+        if (instanceFactory == null) {
+            throw new IllegalArgumentException("Unsupported instance scope type: " + scope);
+        }
+        if (creator == null) {
+            creator = DEFAULT_INSTANCE_CREATOR;
+        }
+        return instanceFactory.get(creator, clazz);
+    }
+
+    private static class DefaultInstanceCreator implements InstanceCreator {
+
+        @Override
+        public <T> T create(Class<T> clazz) {
+            try {
+                return clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                ExceptionUtil.sneakyThrow(e);
+                return null;
+            }
+        }
+
+    }
+
+    private interface InstanceFactory {
+
+        <T> T get(InstanceCreator creator, Class<T> clazz);
+
+    }
+
+    private static class GlobalInstanceFactory implements InstanceFactory {
+
+        private final ConcurrentMap<Class, Object> instanceMap =
+                new ConcurrentHashMap<Class, Object>();
+
+        @Override
+        public <T> T get(InstanceCreator creator, Class<T> clazz) {
+            Object instance = instanceMap.get(clazz);
+            if (instance == null) {
+                synchronized (instanceMap) {
+                    instance = instanceMap.get(clazz);
+                    if (instance == null) {
+                        instance = creator.create(clazz);
+                        instanceMap.put(clazz, instance);
+                    }
+                }
+            }
+            return (T) instance;
+        }
+
+    }
+
+    private static class ThreadLocalInstanceFactory implements InstanceFactory {
+
+        private final ThreadLocal<Object> threadLocalInstance =
+                new ThreadLocal<Object>();
+
+        @Override
+        public <T> T get(InstanceCreator creator, Class<T> clazz) {
+            Object instance = threadLocalInstance.get();
+            if (instance == null) {
+                instance = creator.create(clazz);
+                threadLocalInstance.set(instance);
+            }
+            return (T) instance;
+        }
+
+    }
+
+    private static class InheritableThreadLocalInstanceFactory implements InstanceFactory {
+
+        private final ThreadLocal<Object> threadLocalInstance =
+                new InheritableThreadLocal<Object>();
+
+        @Override
+        public <T> T get(InstanceCreator creator, Class<T> clazz) {
+            Object instance = threadLocalInstance.get();
+            if (instance == null) {
+                instance = creator.create(clazz);
+                threadLocalInstance.set(instance);
+            }
+            return (T) instance;
+        }
+
+    }
+
+    private static class PrototypeInstanceFactory implements InstanceFactory {
+
+        @Override
+        public <T> T get(InstanceCreator creator, Class<T> clazz) {
+            return creator.create(clazz);
+        }
+
+    }
+
+}
