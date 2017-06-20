@@ -9,24 +9,19 @@
     </parent>
 
     <groupId>com.opsgenie</groupId>
-    <artifactId>opsgenie-core</artifactId>
-    <name>opsgenie-core</name>
+    <artifactId>opsgenie-aws-core</artifactId>
+    <name>opsgenie-aws-core</name>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <groupId>com.opsgenie</groupId>
+            <artifactId>opsgenie-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
         </dependency>
     </dependencies>
-
+    
 </project>
