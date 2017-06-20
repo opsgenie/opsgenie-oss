@@ -3,6 +3,9 @@ package com.opsgenie.core.property;
 import com.opsgenie.core.property.provider.ProfileProvider;
 
 /**
+ * User home directory based {@link PropertyAccessor} implementation
+ * which searches/loads properties from user home directory.
+ *
  * @author serkan
  */
 public class UserHomeAwarePropertyAccessor extends FileSystemAwarePropertyAccessor {

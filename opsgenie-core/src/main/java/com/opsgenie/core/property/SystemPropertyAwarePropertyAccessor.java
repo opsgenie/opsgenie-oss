@@ -3,6 +3,9 @@ package com.opsgenie.core.property;
 import java.util.*;
 
 /**
+ * System property based {@link PropertyAccessor} implementation
+ * which searches/loads properties from system properties.
+ *
  * @author serkan
  */
 public class SystemPropertyAwarePropertyAccessor implements PropertyAccessor {

@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 
 /**
+ * Provider which services profile name.
+ *
  * @author serkan
  */
 public final class ProfileProvider {

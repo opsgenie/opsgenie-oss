@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
+ * Utility class for property access related stuff.
+ *
  * @author serkan
  */
 public final class PropertyAccessorUtil {

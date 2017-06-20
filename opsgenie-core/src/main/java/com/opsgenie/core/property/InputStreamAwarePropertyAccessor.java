@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * {@link InputStream} based {@link PropertyAccessor} implementation
+ * which searches/loads properties from given {@link InputStream}.
+ *
  * @author serkan
  */
 public class InputStreamAwarePropertyAccessor implements PropertyAccessor {

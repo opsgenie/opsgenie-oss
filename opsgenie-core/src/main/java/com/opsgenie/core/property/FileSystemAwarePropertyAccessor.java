@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * File system based {@link PropertyAccessor} implementation
+ * which searches/loads properties from file system.
+ *
  * @author serkan
  */
 public class FileSystemAwarePropertyAccessor implements PropertyAccessor {

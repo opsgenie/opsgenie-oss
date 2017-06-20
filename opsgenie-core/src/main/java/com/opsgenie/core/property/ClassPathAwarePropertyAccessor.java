@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Classpath based {@link PropertyAccessor} implementation
+ * which searches/loads properties from classpath.
+ *
  * @author serkan
  */
 public class ClassPathAwarePropertyAccessor implements PropertyAccessor {

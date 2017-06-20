@@ -1,10 +1,13 @@
 package com.opsgenie.core.property;
 
-import com.opsgenie.core.property.provider.PropertyProviderRegistry;
+import com.opsgenie.core.property.provider.PropertyProviderManager;
 
 import java.util.Map;
 
 /**
+ * {@link PropertyAccessor} implementation which provides properties
+ * over registered {@link com.opsgenie.core.property.provider.PropertyProvider}s.
+ *
  * @author serkan
  */
 public final class ProvidedPropertyAccessor implements PropertyAccessor {
@@ -16,12 +19,12 @@ public final class ProvidedPropertyAccessor implements PropertyAccessor {
 
     @Override
     public String getProperty(String propName) {
-        return PropertyProviderRegistry.lookupProperty(propName);
+        return PropertyProviderManager.lookupProperty(propName);
     }
 
     @Override
     public Map<String, String> getProperties() {
-        return PropertyProviderRegistry.getAllProvidedProperties();
+        return PropertyProviderManager.getAllProvidedProperties();
     }
 
 }

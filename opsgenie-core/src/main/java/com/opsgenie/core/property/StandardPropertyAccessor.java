@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Standard {@link PropertyAccessor} implementation to be used for common cases.
+ *
  * @author serkan
  */
 public class StandardPropertyAccessor extends CombinedPropertyAccessor {

@@ -3,6 +3,9 @@ package com.opsgenie.core.property;
 import java.util.*;
 
 /**
+ * {@link PropertyAccessor} implementation which combines multiple
+ * {@link PropertyAccessor}s.
+ *
  * @author serkan
  */
 public class CombinedPropertyAccessor implements PropertyAccessor {
@@ -55,9 +58,6 @@ public class CombinedPropertyAccessor implements PropertyAccessor {
         }
 
         public Builder add(PropertyAccessor propertyAccessor) {
-            if (latestPropertyAccessor instanceof DelegatedPropertyAccessor) {
-                ((DelegatedPropertyAccessor) latestPropertyAccessor).injectPropertyProviderToDelegate(propertyAccessor);
-            }
             propertyAccessors.add(propertyAccessor);
             latestPropertyAccessor = propertyAccessor;
             return this;
