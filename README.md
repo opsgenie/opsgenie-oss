@@ -15,9 +15,9 @@ Below are the various artifacts published:
 
 |Artifact|Description|
 |-----------|---------------|
-|opsgenie-core|Core module|
-|opsgenie-aws-core|Core AWS module|
-|opsgenie-aws-s3|S3 extension for AWS module|
+|[opsgenie-core](opsgenie-core)|Core module|
+|[opsgenie-aws-core](opsgenie-aws-core)|Core AWS module|
+|[opsgenie-aws-s3](opsgenie-aws-s3)|S3 extension for AWS module|
 
 ## Builds
 
@@ -25,7 +25,7 @@ OpsGenie-OSS builds are run on OpsGenie's internal Jenkins.
 
 |  Branch |                                                     Build                                                     |                                                                         Coverage                                                                         |                                                                         Tests                                                                         |
 |:-------:|:-------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------:|
-|  Master | [![Build Status](https://jenkins.opsgeni.us/buildStatus/buildIcon?job=OpsGenieOSSBuild)](https://jenkins.opsgeni.us/view/OpsGenie%20OSS/job/OpsGenieOSSBuild/) | [![Code Coverage](https://jenkins.opsgeni.us/buildStatus/coverageIcon?job=OpsGenieOSSBuild)](https://jenkins.opsgeni.us/view/OpsGenie%20OSS/job/OpsGenieOSSBuild/) | [![Test Status](https://jenkins.opsgeni.us/buildStatus/testIcon?job=OpsGenieOSSBuild)](https://jenkins.opsgeni.us/view/OpsGenie%20OSS/job/OpsGenieOSSBuild/) |
+|  Master | [![Build Status](https://jenkins.opsgeni.us/buildStatus/buildIcon?job=OpsGenieOSSBuild)]() | [![Code Coverage](https://jenkins.opsgeni.us/buildStatus/coverageIcon?job=OpsGenieOSSBuild)]() | [![Test Status](https://jenkins.opsgeni.us/buildStatus/testIcon?job=OpsGenieOSSBuild)]() |
 
 ## Requirements
 
