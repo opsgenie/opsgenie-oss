@@ -27,6 +27,19 @@ OpsGenie-OSS builds are run on OpsGenie's internal Jenkins.
 |:-------:|:-------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------:|
 |  Master | [![Build Status](https://jenkins.opsgeni.us/buildStatus/buildIcon?job=OpsGenieOSSBuild)]() | [![Code Coverage](https://jenkins.opsgeni.us/buildStatus/coverageIcon?job=OpsGenieOSSBuild)]() | [![Test Status](https://jenkins.opsgeni.us/buildStatus/testIcon?job=OpsGenieOSSBuild)]() |
 
+## Versioning
+
+Artifact versions are in `X.Y.Z` format
+- `X`: Major version number. 
+  - Increases only when there are big API and/or architectural changes. 
+  - Breaks backward compatibility.
+- `Y`: Minor version number. 
+  - Increases for small API changes and big improvements. 
+  - Breaks backward compatibility.
+- `Z`: Patch version number. 
+  - Increases for bug fixes and small improvements. 
+  - Doesn’t break backward compatibility. 
+
 ## Requirements
 
 * JDK 1.8+ (for build and execution)
