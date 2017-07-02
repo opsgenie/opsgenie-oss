@@ -77,7 +77,7 @@ If you would like to contribute, please
 
 ## LICENSE
 
-Copyright (c) 2016 OpsGenie
+Copyright (c) 2017 OpsGenie, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
