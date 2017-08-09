@@ -17,6 +17,15 @@ import java.util.Map;
  */
 public class TypeAwareJsonMapper {
 
+    private final ThreadLocal<ObjectMapper> defaultObjectMapperThreadLocal =
+            new ThreadLocal<ObjectMapper>() {
+                @Override
+                protected ObjectMapper initialValue() {
+                    return new ObjectMapper().
+                            configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false).
+                            configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+                }
+            };
     private final ThreadLocal<ReaderWriterInfo> readerWriterInfoThreadLocal =
             new ThreadLocal<ReaderWriterInfo>() {
                 @Override
@@ -157,23 +166,39 @@ public class TypeAwareJsonMapper {
     }
 
     public String writeObject(Object obj) throws JsonProcessingException {
-        Class<?> clazz = obj.getClass();
-        return getOrCreateWriter(clazz).writeValueAsString(obj);
+        if (obj != null) {
+            Class<?> clazz = obj.getClass();
+            return getOrCreateWriter(clazz).writeValueAsString(obj);
+        } else {
+            return defaultObjectMapperThreadLocal.get().writeValueAsString(null);
+        }
     }
 
     public void writeObject(OutputStream os, Object obj) throws IOException {
-        Class<?> clazz = obj.getClass();
-        getOrCreateWriter(clazz).writeValue(os, obj);
+        if (obj != null) {
+            Class<?> clazz = obj.getClass();
+            getOrCreateWriter(clazz).writeValue(os, obj);
+        } else {
+            defaultObjectMapperThreadLocal.get().writeValue(os, null);
+        }
     }
 
     public String writeTypedObject(Object obj) throws JsonProcessingException {
-        Class<?> clazz = obj.getClass();
-        return getOrCreateWriter(clazz).withRootName(clazz.getName()).writeValueAsString(obj);
+        if (obj != null) {
+            Class<?> clazz = obj.getClass();
+            return getOrCreateWriter(clazz).withRootName(clazz.getName()).writeValueAsString(obj);
+        } else {
+            return defaultObjectMapperThreadLocal.get().writeValueAsString(null);
+        }
     }
 
     public void writeTypedObject(OutputStream os, Object obj) throws IOException {
-        Class<?> clazz = obj.getClass();
-        getOrCreateWriter(clazz).withRootName(clazz.getName()).writeValue(os, obj);
+        if (obj != null) {
+            Class<?> clazz = obj.getClass();
+            getOrCreateWriter(clazz).withRootName(clazz.getName()).writeValue(os, obj);
+        } else {
+            defaultObjectMapperThreadLocal.get().writeValue(os, null);
+        }
     }
 
 }
