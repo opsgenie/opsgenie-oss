@@ -41,10 +41,19 @@ public final class EnvironmentInitializerManager {
 
     private static void init() {
         for (EnvironmentInitializer environmentInitializer : ENVIRONMENT_INITIALIZERS) {
+            long start = System.currentTimeMillis();
             try {
                 environmentInitializer.initialize();
+                LOGGER.info(
+                        String.format(
+                                "Environment initializer %s has completed its initialization in %d milliseconds",
+                                environmentInitializer, System.currentTimeMillis() - start));
             } catch (Throwable t) {
-                LOGGER.error("Unable to initialize " + environmentInitializer, t);
+                LOGGER.error(
+                        String.format(
+                                "Environment initializer %s has failed because of %s after %d milliseconds",
+                                environmentInitializer, t.getMessage(), System.currentTimeMillis() - start),
+                        t);
             }
         }
     }
