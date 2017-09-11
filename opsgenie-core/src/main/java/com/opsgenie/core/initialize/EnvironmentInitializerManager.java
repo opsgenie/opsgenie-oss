@@ -1,7 +1,6 @@
 package com.opsgenie.core.initialize;
 
 import com.opsgenie.core.instance.InstanceDiscovery;
-import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,8 +13,6 @@ import java.util.List;
  * @author serkan
  */
 public final class EnvironmentInitializerManager {
-
-    private static final Logger LOGGER = Logger.getLogger(EnvironmentInitializerManager.class);
 
     private static boolean initialized = false;
     private static List<EnvironmentInitializer> ENVIRONMENT_INITIALIZERS =
@@ -44,16 +41,19 @@ public final class EnvironmentInitializerManager {
             long start = System.currentTimeMillis();
             try {
                 environmentInitializer.initialize();
-                LOGGER.info(
+                System.out.println(
                         String.format(
                                 "Environment initializer %s has completed its initialization in %d milliseconds",
                                 environmentInitializer, System.currentTimeMillis() - start));
             } catch (Throwable t) {
-                LOGGER.error(
+                t.printStackTrace();
+                System.err.println(
                         String.format(
-                                "Environment initializer %s has failed because of %s after %d milliseconds",
-                                environmentInitializer, t.getMessage(), System.currentTimeMillis() - start),
-                        t);
+                                "Environment initializer %s has failed because of %s after %d milliseconds: %s",
+                                environmentInitializer,
+                                t.getMessage(),
+                                System.currentTimeMillis() - start,
+                                t.getMessage()));
             }
         }
     }
