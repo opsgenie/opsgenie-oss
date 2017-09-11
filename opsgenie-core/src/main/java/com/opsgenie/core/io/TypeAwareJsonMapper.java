@@ -23,7 +23,8 @@ public class TypeAwareJsonMapper {
                 protected ObjectMapper initialValue() {
                     return new ObjectMapper().
                             configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false).
-                            configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+                            configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).
+                            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 }
             };
     private final ThreadLocal<ReaderWriterInfo> readerWriterInfoThreadLocal =
