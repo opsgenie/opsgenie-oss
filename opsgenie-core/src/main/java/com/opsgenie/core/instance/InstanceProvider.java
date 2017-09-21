@@ -2,6 +2,9 @@ package com.opsgenie.core.instance;
 
 import com.opsgenie.core.util.ExceptionUtil;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -137,6 +140,30 @@ public final class InstanceProvider {
             return creator.create(clazz);
         }
 
+    }
+
+    public static <T> T createLazyLoadableInstance(Class<T> instanceInterface, InstanceLoader<T> instanceLoader) {
+        if (!instanceInterface.isInterface()) {
+            throw new IllegalArgumentException("Specified type for instance interface is not an interface");
+        }
+        return (T) Proxy.newProxyInstance(
+                instanceInterface.getClassLoader(),
+                new Class[] { instanceInterface },
+                new InvocationHandler() {
+                    private final Object mutex = new Object();
+                    private volatile Object bean;
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if (bean == null) {
+                            synchronized (mutex) {
+                                if (bean == null) {
+                                    bean = instanceLoader.load();
+                                }
+                            }
+                        }
+                        return method.invoke(bean, args);
+                    }
+                });
     }
 
 }
