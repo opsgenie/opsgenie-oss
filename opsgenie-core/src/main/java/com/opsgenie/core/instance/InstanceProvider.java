@@ -3,6 +3,7 @@ package com.opsgenie.core.instance;
 import com.opsgenie.core.util.ExceptionUtil;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -161,7 +162,11 @@ public final class InstanceProvider {
                                 }
                             }
                         }
-                        return method.invoke(bean, args);
+                        try {
+                            return method.invoke(bean, args);
+                        } catch (InvocationTargetException e) {
+                            throw e.getCause();
+                        }
                     }
                 });
     }
