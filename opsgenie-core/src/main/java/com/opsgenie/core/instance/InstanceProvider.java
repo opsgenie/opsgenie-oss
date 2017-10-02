@@ -144,28 +144,61 @@ public final class InstanceProvider {
     }
 
     public static <T> T createLazyLoadableInstance(Class<T> instanceInterface, InstanceLoader<T> instanceLoader) {
+        return createLazyLoadableInstance(instanceInterface, instanceLoader, null);
+    }
+
+    public static <T> T createLazyLoadableInstance(Class<T> instanceInterface,
+                                                   InstanceLoader<T> instanceLoader,
+                                                   Class<? extends T> instanceClass) {
         if (!instanceInterface.isInterface()) {
             throw new IllegalArgumentException("Specified type for instance interface is not an interface");
         }
+
+        Method getInstTypeMethod = null;
+        try {
+            getInstTypeMethod = InstanceTypeAwareProxy.class.getMethod("getInstanceType");
+        } catch (NoSuchMethodException e) {
+            ExceptionUtil.sneakyThrow(e);
+        }
+        final Method getInstanceTypeMethod = getInstTypeMethod;
+
+        Method getInstClassMethod = null;
+        if (instanceClass != null) {
+            try {
+                getInstClassMethod = InstanceClassAwareProxy.class.getMethod("getInstanceClass");
+            } catch (NoSuchMethodException e) {
+                ExceptionUtil.sneakyThrow(e);
+            }
+        }
+        final Method getInstanceClassMethod = getInstClassMethod;
+
         return (T) Proxy.newProxyInstance(
                 instanceInterface.getClassLoader(),
-                new Class[] { instanceInterface },
+                getInstanceClassMethod != null
+                    ? new Class[] { InstanceTypeAwareProxy.class, InstanceClassAwareProxy.class, instanceInterface }
+                    : new Class[] { InstanceTypeAwareProxy.class, instanceInterface },
                 new InvocationHandler() {
                     private final Object mutex = new Object();
                     private volatile Object bean;
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        if (bean == null) {
-                            synchronized (mutex) {
-                                if (bean == null) {
-                                    bean = instanceLoader.load();
+                        if (method.equals(getInstanceTypeMethod)) {
+                            return instanceInterface;
+                        } else if (getInstanceClassMethod != null && method.equals(getInstanceClassMethod)) {
+                            return instanceClass;
+                        } else {
+                            if (bean == null) {
+                                synchronized (mutex) {
+                                    if (bean == null) {
+                                        bean = instanceLoader.load();
+                                    }
                                 }
                             }
-                        }
-                        try {
-                            return method.invoke(bean, args);
-                        } catch (InvocationTargetException e) {
-                            throw e.getCause();
+                            try {
+                                return method.invoke(bean, args);
+                            } catch (InvocationTargetException e) {
+                                throw e.getCause();
+                            }
                         }
                     }
                 });
