@@ -1,9 +1,9 @@
 package com.opsgenie.core.entity;
 
 /**
- * @author serkan
- *
  * Interface for implementations which can be activated/deactivated.
+ *
+ * @author serkan
  */
 public interface Activatable {
 

@@ -40,7 +40,7 @@ public class TypeAwareJsonMapper {
                 new ObjectMapper().
                         configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false).
                         configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).
-                        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);;
+                        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         private final Map<Class, ObjectReader> readerMap = new HashMap<Class, ObjectReader>();
         private final Map<Class, ObjectWriter> writerMap = new HashMap<Class, ObjectWriter>();
     }

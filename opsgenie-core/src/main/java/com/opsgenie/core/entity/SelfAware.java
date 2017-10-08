@@ -1,9 +1,9 @@
 package com.opsgenie.core.entity;
 
 /**
- * @author serkan
- *
  * Interface to represent types which can give information about themselves.
+ *
+ * @author serkan
  */
 public interface SelfAware {
 

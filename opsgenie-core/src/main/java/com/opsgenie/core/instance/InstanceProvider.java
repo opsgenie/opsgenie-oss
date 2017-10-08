@@ -172,11 +172,19 @@ public final class InstanceProvider {
         }
         final Method getInstanceClassMethod = getInstClassMethod;
 
+        Method getInstMethod = null;
+        try {
+            getInstMethod = InstanceAwareProxy.class.getMethod("getInstance");
+        } catch (NoSuchMethodException e) {
+            ExceptionUtil.sneakyThrow(e);
+        }
+        final Method getInstanceMethod = getInstMethod;
+
         return (T) Proxy.newProxyInstance(
                 instanceInterface.getClassLoader(),
                 getInstanceClassMethod != null
-                    ? new Class[] { InstanceTypeAwareProxy.class, InstanceClassAwareProxy.class, instanceInterface }
-                    : new Class[] { InstanceTypeAwareProxy.class, instanceInterface },
+                    ? new Class[] { InstanceTypeAwareProxy.class, InstanceClassAwareProxy.class, InstanceAwareProxy.class, instanceInterface }
+                    : new Class[] { InstanceTypeAwareProxy.class, InstanceAwareProxy.class, instanceInterface },
                 new InvocationHandler() {
                     private final Object mutex = new Object();
                     private volatile Object bean;
@@ -186,6 +194,15 @@ public final class InstanceProvider {
                             return instanceInterface;
                         } else if (getInstanceClassMethod != null && method.equals(getInstanceClassMethod)) {
                             return instanceClass;
+                        } else if (method.equals(getInstanceMethod)) {
+                            if (bean == null) {
+                                synchronized (mutex) {
+                                    if (bean == null) {
+                                        bean = instanceLoader.load();
+                                    }
+                                }
+                            }
+                            return bean;
                         } else {
                             if (bean == null) {
                                 synchronized (mutex) {

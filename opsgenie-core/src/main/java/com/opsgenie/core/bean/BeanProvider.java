@@ -3,6 +3,8 @@ package com.opsgenie.core.bean;
 import com.opsgenie.core.instance.InstanceLoader;
 import com.opsgenie.core.instance.InstanceProvider;
 
+import java.util.List;
+
 /**
  * Interface for implementations which provide managed beans.
  *
@@ -72,6 +74,15 @@ public interface BeanProvider {
     default<T> T get(Class<T> beanType, boolean lazy) {
         return get(beanType, null, lazy);
     }
+
+    /**
+     * Gets the all given <code>beanType</code> typed beans.
+     *
+     * @param beanType interface {@link Class} of the requested beans
+     * @param <T>      generic type of the beans
+     * @return the provided beans
+     */
+    <T> List<T> getAll(Class<T> beanType);
 
     /**
      * Resets this bean provider by clearing current beans.

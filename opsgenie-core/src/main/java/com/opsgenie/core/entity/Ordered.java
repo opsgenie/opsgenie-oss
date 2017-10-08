@@ -1,9 +1,9 @@
 package com.opsgenie.core.entity;
 
 /**
- * @author serkan
- *
  * Interface to specify order.
+ *
+ * @author serkan
  */
 public interface Ordered {
 
