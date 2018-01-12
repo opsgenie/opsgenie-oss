@@ -24,4 +24,170 @@ public interface PropertyAccessor {
      */
     Map<String, String> getProperties();
 
+    /**
+     * Gets the <code>string</code> typed property associated with the given property name.
+     *
+     * @param propName          name of the property
+     * @param defaultPropValue  default value of the property to be returned
+     *                          if requested property is not exist
+     * @return the property value if it is exist, default value otherwise
+     */
+    default String getProperty(String propName, String defaultPropValue) {
+        String propValue = getProperty(propName);
+        if (propValue != null) {
+            return propValue;
+        }
+        return defaultPropValue;
+    }
+
+    /**
+     * Gets the <code>boolean</code> typed property associated with the given property name.
+     *
+     * @param propName name of the property
+     * @return the property value if it is exist, <code>null</code> otherwise
+     */
+    default Boolean getBooleanProperty(String propName) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return null;
+        }
+        return Boolean.parseBoolean(propValue);
+    }
+
+    /**
+     * Gets the <code>boolean</code> typed property associated with the given property name.
+     *
+     * @param propName          name of the property
+     * @param defaultPropValue  default value of the property to be returned
+     *                          if requested property is not exist
+     * @return the property value if it is exist, default value otherwise
+     */
+    default Boolean getBooleanProperty(String propName, boolean defaultPropValue) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return defaultPropValue;
+        }
+        return Boolean.parseBoolean(propValue);
+    }
+
+    /**
+     * Gets the <code>integer</code> typed property associated with the given property name.
+     *
+     * @param propName name of the property
+     * @return the property value if it is exist, <code>null</code> otherwise
+     */
+    default Integer getIntegerProperty(String propName) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return null;
+        }
+        return Integer.parseInt(propValue);
+    }
+
+    /**
+     * Gets the <code>integer</code> typed property associated with the given property name.
+     *
+     * @param propName          name of the property
+     * @param defaultPropValue  default value of the property to be returned
+     *                          if requested property is not exist
+     * @return the property value if it is exist, default value otherwise
+     */
+    default Integer getIntegerProperty(String propName, int defaultPropValue) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return defaultPropValue;
+        }
+        return Integer.parseInt(propValue);
+    }
+
+    /**
+     * Gets the <code>long</code> typed property associated with the given property name.
+     *
+     * @param propName name of the property
+     * @return the property value if it is exist, <code>null</code> otherwise
+     */
+    default Long getLongProperty(String propName) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return null;
+        }
+        return Long.parseLong(propValue);
+    }
+
+    /**
+     * Gets the <code>long</code> typed property associated with the given property name.
+     *
+     * @param propName          name of the property
+     * @param defaultPropValue  default value of the property to be returned
+     *                          if requested property is not exist
+     * @return the property value if it is exist, default value otherwise
+     */
+    default Long getLongProperty(String propName, long defaultPropValue) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return defaultPropValue;
+        }
+        return Long.parseLong(propValue);
+    }
+
+    /**
+     * Gets the <code>float</code> typed property associated with the given property name.
+     *
+     * @param propName name of the property
+     * @return the property value if it is exist, <code>null</code> otherwise
+     */
+    default Float getFloatProperty(String propName) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return null;
+        }
+        return Float.parseFloat(propValue);
+    }
+
+    /**
+     * Gets the <code>float</code> typed property associated with the given property name.
+     *
+     * @param propName          name of the property
+     * @param defaultPropValue  default value of the property to be returned
+     *                          if requested property is not exist
+     * @return the property value if it is exist, default value otherwise
+     */
+    default Float getFloatProperty(String propName, float defaultPropValue) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return defaultPropValue;
+        }
+        return Float.parseFloat(propValue);
+    }
+
+    /**
+     * Gets the <code>double</code> typed property associated with the given property name.
+     *
+     * @param propName name of the property
+     * @return the property value if it is exist, <code>null</code> otherwise
+     */
+    default Double getDoubleProperty(String propName) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return null;
+        }
+        return Double.parseDouble(propValue);
+    }
+
+    /**
+     * Gets the <code>double</code> typed property associated with the given property name.
+     *
+     * @param propName          name of the property
+     * @param defaultPropValue  default value of the property to be returned
+     *                          if requested property is not exist
+     * @return the property value if it is exist, default value otherwise
+     */
+    default Double getDoubleProperty(String propName, double defaultPropValue) {
+        String propValue = getProperty(propName);
+        if (propValue == null) {
+            return defaultPropValue;
+        }
+        return Double.parseDouble(propValue);
+    }
+
 }
