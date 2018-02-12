@@ -1,11 +1,9 @@
 package com.opsgenie.core.instance;
 
 import com.opsgenie.core.entity.Ordered;
+import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -17,7 +15,39 @@ import java.util.*;
  */
 public final class InstanceDiscovery {
 
-    private static final String PREFIX = "META-INF/services/";
+    private static final String PREFIX;
+
+    private static final Logger LOGGER = Logger.getLogger(InstanceDiscovery.class);
+
+    static {
+        String prefix = "META-INF/services/";
+        List<Class<? extends InstanceDefinitionPathProvider>> pathProviderClasses =
+                typesOf(prefix, InstanceDefinitionPathProvider.class, null);
+        if (pathProviderClasses != null && !pathProviderClasses.isEmpty()) {
+            if (pathProviderClasses.size() > 1) {
+                LOGGER.warn(String.format(
+                        "There are multiple instance definition path providers: %s. " +
+                                "The one with lowest order will be used", pathProviderClasses));
+            }
+            Class<? extends InstanceDefinitionPathProvider> pathProviderClass =
+                        pathProviderClasses.get(0);
+            try {
+                InstanceDefinitionPathProvider instanceDefinitionPathProvider =
+                        InstanceProvider.getInstance(pathProviderClass, InstanceScope.GLOBAL);
+                String path = instanceDefinitionPathProvider.getPath();
+                if (path != null) {
+                    prefix = path;
+                }
+            } catch (Throwable t) {
+                LOGGER.error("Error occurred while getting instance definition path. " +
+                             "So going on with default one: " + prefix, t);
+            }
+        }
+        if (!prefix.endsWith("/")) {
+            prefix = prefix + "/";
+        }
+        PREFIX = prefix;
+    }
 
     private InstanceDiscovery() {
     }
@@ -98,10 +128,14 @@ public final class InstanceDiscovery {
     }
 
     public static <T> List<Class<? extends T>> typesOf(Class<T> type, ClassLoader loader) {
+        return typesOf(PREFIX, type, loader);
+    }
+
+    private static <T> List<Class<? extends T>> typesOf(String prefix, Class<T> type, ClassLoader loader) {
         List<Class<? extends T>> types = new ArrayList<Class<? extends T>>();
         try {
             Enumeration<URL> configs;
-            String fullName = PREFIX + type.getName();
+            String fullName = prefix + type.getName();
             if (loader == null) {
                 configs = InstanceDiscovery.class.getClassLoader().getResources(fullName);
             } else {
