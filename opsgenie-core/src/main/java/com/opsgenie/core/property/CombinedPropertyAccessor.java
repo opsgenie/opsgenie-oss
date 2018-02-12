@@ -10,10 +10,12 @@ import java.util.*;
  */
 public class CombinedPropertyAccessor implements PropertyAccessor {
 
-    private final List<PropertyAccessor> propertyAccessors;
-    private final Map<String, String> props = new HashMap<String, String>();
+    protected final Map<String, String> props;
+    protected final List<PropertyAccessor> propertyAccessors;
 
-    public CombinedPropertyAccessor(PropertyAccessor... propertyAccessors) {
+    protected CombinedPropertyAccessor(Map<String, String> props,
+                                       PropertyAccessor... propertyAccessors) {
+        this.props = props;
         this.propertyAccessors = Arrays.asList(propertyAccessors);
         for (int i = propertyAccessors.length - 1; i >= 0; i--) {
             PropertyAccessor propertyAccessor = propertyAccessors[i];
@@ -21,7 +23,13 @@ public class CombinedPropertyAccessor implements PropertyAccessor {
         }
     }
 
-    public CombinedPropertyAccessor(List<PropertyAccessor> propertyAccessors) {
+    public CombinedPropertyAccessor(PropertyAccessor... propertyAccessors) {
+        this(new HashMap<String, String>(), propertyAccessors);
+    }
+
+    protected CombinedPropertyAccessor(Map<String, String> props,
+                                       List<PropertyAccessor> propertyAccessors) {
+        this.props = props;
         this.propertyAccessors = propertyAccessors;
         for (int i = propertyAccessors.size() - 1; i >= 0; i--) {
             PropertyAccessor propertyAccessor = propertyAccessors.get(i);
@@ -29,15 +37,13 @@ public class CombinedPropertyAccessor implements PropertyAccessor {
         }
     }
 
+    public CombinedPropertyAccessor(List<PropertyAccessor> propertyAccessors) {
+        this(new HashMap<String, String>(), propertyAccessors);
+    }
+
     @Override
     public String getProperty(String propName) {
-        for (PropertyAccessor propertyAccessor : propertyAccessors) {
-            String propValue = propertyAccessor.getProperty(propName);
-            if (propValue != null) {
-                return propValue;
-            }
-        }
-        return null;
+        return props.get(propName);
     }
 
     @Override

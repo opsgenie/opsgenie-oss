@@ -25,6 +25,16 @@ public interface PropertyAccessor {
     Map<String, String> getProperties();
 
     /**
+     * Checks whether there is existing property associated with given property name.
+     *
+     * @param propName name of the property to be checked whether it is exist
+     * @return <code>true</code> if property is exist, <code>false</code> otherwise
+     */
+    default boolean hasProperty(String propName) {
+        return getProperty(propName) != null;
+    }
+
+    /**
      * Gets the <code>string</code> typed property associated with the given property name.
      *
      * @param propName          name of the property

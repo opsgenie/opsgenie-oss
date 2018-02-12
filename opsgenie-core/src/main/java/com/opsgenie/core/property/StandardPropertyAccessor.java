@@ -4,13 +4,16 @@ import com.opsgenie.core.property.provider.ProfileProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Standard {@link PropertyAccessor} implementation to be used for common cases.
  *
  * @author serkan
  */
-public class StandardPropertyAccessor extends CombinedPropertyAccessor {
+public class StandardPropertyAccessor
+        extends CombinedPropertyAccessor
+        implements MutablePropertyAccessor {
 
     public static final String BASE_CONFIG_FILE =
             System.getProperty("opsgenie.property.baseConfigFile", "app-config.properties");
@@ -18,15 +21,18 @@ public class StandardPropertyAccessor extends CombinedPropertyAccessor {
     public static final StandardPropertyAccessor DEFAULT = new StandardPropertyAccessor();
 
     private StandardPropertyAccessor() {
-        super(createStandardPropertyAccessors(null, ProfileProvider.getProfile()));
+        super(new ConcurrentHashMap<String, String>(), // because this property accessor is mutable
+              createStandardPropertyAccessors(null, ProfileProvider.getProfile()));
     }
 
     public StandardPropertyAccessor(String propFileName) {
-        super(createStandardPropertyAccessors(propFileName, ProfileProvider.getProfile()));
+        super(new ConcurrentHashMap<String, String>(), // because this property accessor is mutable
+              createStandardPropertyAccessors(propFileName, ProfileProvider.getProfile()));
     }
 
     public StandardPropertyAccessor(String propFileName, String profileName) {
-        super(createStandardPropertyAccessors(propFileName, profileName));
+        super(new ConcurrentHashMap<String, String>(), // because this property accessor is mutable
+              createStandardPropertyAccessors(propFileName, profileName));
     }
 
     private static List<PropertyAccessor> createStandardPropertyAccessors(String propFileName, String profileName) {
@@ -45,6 +51,21 @@ public class StandardPropertyAccessor extends CombinedPropertyAccessor {
         propertyAccessors.add(new ClassPathAwarePropertyAccessor(BASE_CONFIG_FILE, profileName));
 
         return propertyAccessors;
+    }
+
+    @Override
+    public String putProperty(String propName, String propValue) {
+        return props.put(propName, propValue);
+    }
+
+    @Override
+    public String putPropertyIfAbsent(String propName, String propValue) {
+        return props.putIfAbsent(propName, propValue);
+    }
+
+    @Override
+    public String removeProperty(String propName) {
+        return props.remove(propName);
     }
 
 }
